@@ -8,7 +8,9 @@ This directory contains following files:
 
     * model.json      - logical model
     * slicer.ini      - server configuration file
-    * data.csv        - https://drive.google.com/open?id=0B7MJnptUCNQPZGZzQzBQUURSYVE 
+    * data.csv        - raw data of events [Google Drive Link](https://drive.google.com/open?id=0B7MJnptUCNQPZGZzQzBQUURSYVE){:target="_blank"}
+    * data.sqlite     - database, just place it in the folder and you won't require prepare_data step 
+                      - [Google Drive Link](https://drive.google.com/open?id=0B7MJnptUCNQPQl8zLTU2VE51cjg){:target="_blank"}
     * prepare_data.py - script for preparing the data: load them into database
                         and create a view
     * aggregate.py    - example aggregations
@@ -17,12 +19,15 @@ Quick start
 -----------
 
 Prepare data::
-
-    python2.7 prepare_data.py data.csv 1 
+This will create data.sqlite file (i.e. the database )
+`
+    python2.7 prepare_data.py data.csv 1
+`   
 
 Get some aggregations::
-
+`
     python2.7 aggregate.py
+`
 
 Web Server
 -------------
@@ -59,5 +64,7 @@ http://packages.python.org/cubes/server.html
 Credits
 -------
 
+- [python cube](http://cubes.databrewery.org/){:target="_blank"}
+- [IRIS webservices][http://service.iris.edu/]{:target="_blank"}
 
 
