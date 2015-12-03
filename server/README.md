@@ -5,16 +5,15 @@ Files
 -----
 
 This directory contains following files:
-
-    * model.json      - logical model
-    * slicer.ini      - server configuration file
-    * data.csv        - raw data of events [Google Drive Link](https://drive.google.com/open?id=0B7MJnptUCNQPZGZzQzBQUURSYVE){:target="_blank"}
-    * data.sqlite     - database, just place it in the folder and you won't require prepare_data step 
-                      - [Google Drive Link](https://drive.google.com/open?id=0B7MJnptUCNQPQl8zLTU2VE51cjg){:target="_blank"}
-    * prepare_data.py - script for preparing the data: load them into database
-                        and create a view
-    * aggregate.py    - example aggregations
-    * requirements.sh - Install all the pip requirements 
+* model.json      - logical model
+* slicer.ini      - server configuration file
+* data.csv        - raw data of events [Google Drive Link](https://drive.google.com/open?id=0B7MJnptUCNQPZGZzQzBQUURSYVE)
+* data.sqlite     - database, just place it in the folder and you won't require prepare_data step 
+              - [Google Drive Link](https://drive.google.com/open?id=0B7MJnptUCNQPQl8zLTU2VE51cjg)
+* prepare_data.py - script for preparing the data: load them into database
+                and create a view
+* aggregate.py    - example aggregations
+* requirements.sh - Install all the pip requirements 
 Quick start
 -----------
 
@@ -64,7 +63,7 @@ http://packages.python.org/cubes/server.html
 Credits
 -------
 
-- [python cube](http://cubes.databrewery.org/){:target="_blank"}
-- [IRIS webservices][http://service.iris.edu/]{:target="_blank"}
+- [python cube](http://cubes.databrewery.org/)
+- [IRIS webservices][http://service.iris.edu/]
 
 
