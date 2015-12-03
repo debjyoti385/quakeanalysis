@@ -1,6 +1,6 @@
 
 body {
-    font-family: "Verdana";
+    /*font-family: "Verdana";*/
     margin: 0px auto;
     width: 1020px;
     background-color: #232424;
@@ -9,6 +9,8 @@ body {
 }
 
 #body{
+    font-family: "Yanone Kaffeesatz";
+    text-rendering: optimizeLegibility;
     position: relative;
     margin: 0px auto;
 }
@@ -65,7 +67,15 @@ form{
     text-rendering: optimizeLegibility;
 }
 
+#result{
+    /*text-align: right;*/
+    margin: 20px 10px;
+}
 
+#filter{
+    height: 200px;
+    text-align: left;
+}
 .border{
     fill: black;
     fill-opacity: .3;
@@ -255,4 +265,22 @@ div.tooltip {
     display: inline-block;
     width: 250px;
     height: 7px;
+}
+
+#showcase {
+    margin: 0 20px;
+    text-align: center;
+}
+#magnitude_slider {
+    height: 15px;
+    width: 400px;
+    margin: 30px auto;
+}
+#value-span,
+#value-input {
+    width: 50%;
+    float: left;
+    display: block;
+    text-align: center;
+    margin: 0;
 }
