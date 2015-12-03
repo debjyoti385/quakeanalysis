@@ -1,0 +1,82 @@
+{
+    "dimensions": [
+        {"name":"year",
+         "label":"",
+         "attributes": ["Year"]
+        },
+        {"name":"month",
+         "label":"",
+         "attributes": ["Month"]
+        },
+        {"name":"lat",
+         "label":"",
+         "attributes": ["Latitude"]
+        },
+        {"name":"long",
+         "label":"",
+         "attributes": ["Longitude"]
+        },
+        {"name":"scale",
+         "label":"",
+         "attributes": ["Magnitude"]
+        },
+        {"name":"time",
+         "label":"",
+         "attributes": ["Time"]
+        },
+        {"name":"date",
+         "label":"",
+         "attributes": ["Date"]
+        }
+
+    ],
+    "cubes": [
+        {
+            "name": "quake_events",
+            "dimensions": ["year","month","date","time","lat","long","scale"],
+            "measures": [
+                {"name":"EventID", "label":"EventID"},
+                {"name":"EventType", "label":"EventType"},
+                {"name":"Region", "label":"Region"},
+                {"name":"RegionType", "label":"RegionType"},
+                {"name":"Latitude", "label":"Latitude"},
+                {"name":"Longitude", "label":"Longitude"},
+                {"name":"Magnitude", "label":"Magnitude"},
+                {"name":"Depth", "label":"Depth"},
+                {"name":"MagnitudeUnit", "label":"MagnitudeUnit"}
+            ],
+            "aggregates": [
+                    {
+                        "name": "maxMagnitude",
+                        "function": "max",
+                        "measure": "Magnitude"
+                    },
+                    {
+                        "name": "avgMagnitude",
+                        "function": "avg",
+                        "measure": "Magnitude"
+                    },
+                    {
+                        "name": "count",
+                        "function": "count"
+                    },
+                    {
+                        "name": "avgLat",
+                        "function": "avg",
+                        "measure": "Latitude"
+                    },
+                                            {
+                            "name":"avgLong",
+                            "function":"avg",
+                            "measure":"Longitude"
+                    }
+                ],
+            "mappings": {
+                         },
+            "info": {
+                "min_date": "2000-01-01",
+                "max_date": "2015-12-31"
+            }
+        }
+    ]
+}

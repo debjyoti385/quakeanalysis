@@ -1,0 +1,1 @@
+slicer serve slicer.ini
