@@ -1,16 +1,21 @@
-(function () {
+//(function () {
     var extent, scale,
-        classes = 9, scheme_id = "Greys",
-        reverse = false;
+        classes = 9, scheme_id = "YlGnBu",
+        reverse = true;
     scheme = colorbrewer[scheme_id][classes],
 
         container = L.DomUtil.get('map'),
-        map = L.map(container).setView([-43.6, 172.3], 10);
+        map = L.map(container).setView([+37.8, -115.5], 6);
 
-    L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS and the GIS User Community',
-        maxZoom: 17
-    }).addTo(map);
+    L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    maxZoom: 17
+}).addTo(map);
+
+    //L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+    //    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS and the GIS User Community',
+    //
+    //});
 
     var areaSelect = L.areaSelect({width:750, height:450});
     areaSelect.on("change", function() {
@@ -19,21 +24,74 @@
         $('#result .swlng').val(bounds.getSouthWest().lng);
         $("#result .nelat").val(bounds.getNorthEast().lat );
         $('#result .nelng').val(bounds.getNorthEast().lng);
+
+        lat_low = parseFloat($("#result .swlat").val());
+        lat_high = parseFloat($("#result .nelat").val());
+        long_low = parseFloat($("#result .swlng").val());
+        long_high = parseFloat($("#result .nelng").val());
     });
     areaSelect.addTo(map);
-    
-    d3.json(container.dataset.source, function(collection) {
-        L.pointsLayer(collection, {
-            radius: get_radius,
-            applyStyle: circle_style
-        }).addTo(map);
 
-        var chart = timeseries_chart(scheme)
-            .x(get_time).xLabel("Earthquake origin time")
-            .y(get_magnitude).yLabel("Magnitude")
-            .brushmove(on_brush);
-        d3.select("body").datum(collection.features).call(chart);
-    });
+    function refresh(url) {
+        if (url == ""){
+            url = "http://localhost:5050/cube/quake_events/facts?cut=scale:3.00-8.00|year:1991-2001|lat:38.20365531807149-41.983994270935625|long:\\-115.927734375-\\-107.68798828125";
+            //map.panTo(new L.LatLng((lat_high+lat_low)/2.0,(long_high + long_low)/2.0));
+        }
+        else{
+            d3.select("#quake-timeseries").remove();
+            console.log((lat_high+lat_low)/2.0 + "  " + (long_high) + " " + ( long_low)/2.0);
+            map.panTo(new L.LatLng((lat_high+lat_low)/2.0,(long_high+long_low)/2.0));
+        }
+        console.log(url);
+        console.log((new Date()).toLocaleTimeString());
+        d3.json( url , function (data) {
+/* CONVERT TO  geojson start */
+            console.log((new Date()).toLocaleTimeString());
+
+            var geojson = {};
+            geojson['type'] = 'FeatureCollection';
+            geojson['features'] = [];
+
+            for (var k in data) {
+                var newFeature = {
+                    "type": "Feature",
+                    "id" : data[k].EventID,
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [parseFloat(data[k].long), parseFloat(data[k].lat)]
+            },
+                "properties": {
+                    "publicid": data[k].EventID,
+                        "origintime": data[k].date +'T'+data[k].time,
+                        "longitude": data[k].long,
+                        "latitude":data[k].lat,
+                        "depth":data[k].Depth,
+                        "region":data[k].Region,
+                        "regiontype":data[k].RegionType,
+                        "date": data[k].date,
+                        "magnitude":data[k].scale,
+                        "magnitudetype":data[k].MagnitudeUnit,
+                        "type":"earthquake"
+                }
+            }
+                geojson['features'].push(newFeature);
+            }
+
+            console.log((new Date()).toLocaleTimeString());
+/* CONVERT TO  geojson end */
+            L.pointsLayer(geojson, {
+                radius: get_radius,
+                applyStyle: circle_style
+            }).addTo(map);
+
+            var chart = timeseries_chart(scheme)
+                .x(get_time).xLabel("Earthquake origin time")
+                .y(get_magnitude).yLabel("Magnitude")
+                .brushmove(on_brush);
+            d3.select("body").datum(geojson.features).call(chart);
+        });
+    }
+    refresh("");
 
     function get_time(d) {
         return d3.time.format.iso.parse(d.properties.origintime);
@@ -64,7 +122,7 @@
                 .range(d3.range(classes));
         }
         circles.attr('opacity', function(d){
-                return 0.5;
+                return 0.75;
             })
             .attr('stroke', scheme[classes - 1])
             .attr('stroke-width', 1)
@@ -75,16 +133,26 @@
         circles.on('click', function (d, i) {
             L.DomEvent.stopPropagation(d3.event);
 
-            var t = '<h3><%- id %></h3>' +
+            var t = '<h3>Event ID <%- id %></h3>' +
                 '<ul>' +
-                '<li>Magnitude: <%- mag %></li>' +
+                '<li> <b> Magnitude: <%- mag %> </b></li>' +
                 '<li>Depth: <%- depth %>km</li>' +
+                '<li><b>Date: <%- date %></b></li>' +
+                '<li>lat: <%- lat %></li>' +
+                '<li>long: <%- long %></li>' +
+                '<li><b>region: <%- region %></b></li>' +
+                '<li>regiontype: <%- regiontype %></li>' +
                 '</ul>';
 
             var data = {
                 id: d.id,
                 mag: d.properties.magnitude,
-                depth: d.properties.depth
+                depth: d.properties.depth,
+                region: d.properties.region,
+                regiontype: d.properties.regiontype,
+                lat: d.properties.latitude,
+                long: d.properties.longitude,
+                date: d.properties.date
             };
 
             L.popup()
@@ -156,7 +224,7 @@
                     .style("stroke-width", 1)
                     .style("stroke", color[color.length - 1])
                     .style("fill", color[2])
-                    .attr("opacity", 0.4);
+                    .attr("opacity", 0.6);
 
                 x.domain(d3.extent(d, get_x));
                 x_axis.call(d3.svg.axis().scale(x).orient("bottom"));
@@ -174,7 +242,7 @@
                     .style("stroke-width", .5)
                     //                        .style("fill", color[color.length - 1])
                     .style("fill", "White")
-                    .attr("opacity", .4)
+                    .attr("opacity", .75)
                     .attr("r", 2)
                     .attr("transform", function (d) {
                         return "translate(" + x(get_x(d)) + "," + y(get_y(d)) + ")";
@@ -220,4 +288,7 @@
 
         return timeseries;
     }
-}());
+//}());
+
+
+//refresh("http://localhost:5050/cube/quake_events/facts?cut=scale:2.80-6.20|lat:\\-43.95624788918461-\\-43.50971700928806|long:171.3812255859375-172.41119384765625");
