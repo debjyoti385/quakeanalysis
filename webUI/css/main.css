@@ -3,7 +3,7 @@ body {
     /*font-family: "Verdana";*/
     margin: 0px auto;
     width: 1020px;
-    background-color: #232424;
+    background-color: #111111;
     color: rgb(170, 170, 170);
     fill: rgb(170, 170, 170);
 }
@@ -73,7 +73,7 @@ form{
 }
 
 #filter{
-    height: 200px;
+    height: 250px;
     text-align: left;
 }
 .border{

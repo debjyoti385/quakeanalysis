@@ -7,11 +7,6 @@
         container = L.DomUtil.get('map'),
         map = L.map(container).setView([-43.6, 172.3], 10);
 
-//        L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
-//            attribution: '<a href="http://content.stamen.com/dotspotting_toner_cartography_available_for_download">Stamen Toner</a>, <a href="http://www.openstreetmap.org/">OpenStreetMap</a>, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-//            maxZoom: 17
-//        }).addTo(map);
-
     L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS and the GIS User Community',
         maxZoom: 17
@@ -26,7 +21,7 @@
         $('#result .nelng').val(bounds.getNorthEast().lng);
     });
     areaSelect.addTo(map);
-
+    
     d3.json(container.dataset.source, function(collection) {
         L.pointsLayer(collection, {
             radius: get_radius,

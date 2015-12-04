@@ -14,7 +14,7 @@ noUiSlider.create(dateSlider, {
     },
 
 // Steps of one week
-    step: 7 * 24 * 60 * 60 * 1000,
+    step: 1 * 24 * 60 * 60 * 1000,
 
 // Two more timestamps indicate the handle starting positions.
     start: [ timestamp('2011'), timestamp('2015') ],
@@ -88,4 +88,29 @@ noUiSlider.create(slider, {
         values: 10,
         density: 1
     }
+});
+
+$('#update').click(function(){
+    scale_low = slider.noUiSlider.get()[0];
+    scale_high = slider.noUiSlider.get()[1];
+    date_start = new Date(dateSlider.noUiSlider.get()[0] * 1);
+    date_end = new Date(dateSlider.noUiSlider.get()[1] * 1);
+
+    lat_low = parseFloat($("#result .swlat").val());
+    lat_high = parseFloat($("#result .nelat").val());
+    long_low = parseFloat($("#result .swlng").val());
+    long_high = parseFloat($("#result .nelng").val());
+
+    if (lat_low < 0 )
+        lat_low = "\\" + lat_low;
+    if (lat_high < 0 )
+        lat_high = "\\" + lat_high;
+    if (long_low < 0 )
+        long_low = "\\" + long_low;
+    if (long_high < 0 )
+        long_high = "\\" + long_high;
+
+
+    url = 'http://localhost:5050/cube/quake_events/facts?cut=scale:'+ scale_low + '-' + scale_high +'|lat:'+ lat_low + '-' + lat_high +'|long:'+ long_low + '-'+ long_high ;
+    alert( url );
 });
