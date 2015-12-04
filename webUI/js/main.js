@@ -1,11 +1,12 @@
 //(function () {
     var extent, scale,
-        classes = 9, scheme_id = "YlGnBu",
-        reverse = true;
+        classes = 6, scheme_id = "YlOrRd",
+        reverse = false;
     scheme = colorbrewer[scheme_id][classes],
 
         container = L.DomUtil.get('map'),
         map = L.map(container).setView([+37.8, -115.5], 6);
+        var pLayer;
 
     L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
@@ -39,6 +40,8 @@
         }
         else{
             d3.select("#quake-timeseries").remove();
+            //map.removeLayers(pLayer);
+            //pLayer.clear();
             console.log((lat_high+lat_low)/2.0 + "  " + (long_high) + " " + ( long_low)/2.0);
             map.panTo(new L.LatLng((lat_high+lat_low)/2.0,(long_high+long_low)/2.0));
         }
@@ -79,10 +82,11 @@
 
             console.log((new Date()).toLocaleTimeString());
 /* CONVERT TO  geojson end */
-            L.pointsLayer(geojson, {
+            pLayer = L.pointsLayer(geojson, {
                 radius: get_radius,
                 applyStyle: circle_style
-            }).addTo(map);
+            });
+            pLayer.addTo(map);
 
             var chart = timeseries_chart(scheme)
                 .x(get_time).xLabel("Earthquake origin time")
@@ -127,7 +131,7 @@
             .attr('stroke', scheme[classes - 1])
             .attr('stroke-width', 1)
             .attr('fill', function (d) {
-                return scheme[(scale(d.properties.depth) * 20).toFixed()];
+                return scheme[(d.properties.magnitude).toFixed()-1];
             });
 
         circles.on('click', function (d, i) {
