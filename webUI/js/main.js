@@ -1,11 +1,12 @@
 //(function () {
+    var center = [+37.8, -115.5];
     var extent, scale,
         classes = 6, scheme_id = "YlOrRd",
         reverse = false;
     scheme = colorbrewer[scheme_id][classes],
 
         container = L.DomUtil.get('map'),
-        map = L.map(container).setView([+37.8, -115.5], 6);
+        map = L.map(container).setView(center, 6);
         var pLayer;
 
     L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -51,6 +52,10 @@
 /* CONVERT TO  geojson start */
             console.log((new Date()).toLocaleTimeString());
 
+/* UPDATE HEXBIN */
+            updateHexBin(data);
+
+
             var geojson = {};
             geojson['type'] = 'FeatureCollection';
             geojson['features'] = [];
@@ -92,7 +97,7 @@
                 .x(get_time).xLabel("Earthquake origin time")
                 .y(get_magnitude).yLabel("Magnitude")
                 .brushmove(on_brush);
-            d3.select("body").datum(geojson.features).call(chart);
+            d3.select("#charts").datum(geojson.features).call(chart);
         });
     }
     refresh("");

@@ -89,43 +89,27 @@ form{
 
 }
 
-
-@import url(http://netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css);
-/*body{*/
-    /*background: #ECECEC;*/
-    /*margin:0px ;*/
-    /*color:#333;*/
-/*}*/
-#update.button{
-    background: #ECECEC;
-    border-radius: 15px;
-    padding: 10px 20px;
-    display: block;
-    font-family: arial;
-    font-weight: bold;
-    color:#7f7f7f;
+.btn {
+    -webkit-border-radius: 14;
+    -moz-border-radius: 14;
+    border-radius: 14px;
+    text-shadow: 0px 17px 18px #101b54;
+    color: #ffffff;
+    font-size: 14px;
+    background: #1c1c1c;
+    padding: 11px 25px 13px 25px;
     text-decoration: none;
-    text-shadow:0px 1px 0px #fff;
-    border:1px solid #a7a7a7;
-    width: 145px;
-    margin:0px auto;
-    margin-top:100px;
-    box-shadow: 0px 2px 1px white inset, 0px -2px 8px white, 0px 2px 5px rgba(0, 0, 0, 0.1), 0px 8px 10px rgba(0, 0, 0, 0.1);
-    -webkit-transition:box-shadow 0.5s;
-}
-#update.button i{
-    float: right;
-    margin-top: 2px;
-}
-#update.button:hover{
-    box-shadow: 0px 2px 1px white inset, 0px -2px 20px white, 0px 2px 5px rgba(0, 0, 0, 0.1), 0px 8px 10px rgba(0, 0, 0, 0.1);
-}
-#update.button:active{
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5) inset, 0px -2px 20px white, 0px 1px 5px rgba(0, 0, 0, 0.1), 0px 2px 10px rgba(0, 0, 0, 0.1);
-    background:-webkit-linear-gradient(top, #d1d1d1 0%,#ECECEC 100%);
 }
 
-
+.btn:hover {
+    background: #363636;
+    background-image: -webkit-linear-gradient(top, #363636, #b3b3b3);
+    background-image: -moz-linear-gradient(top, #363636, #b3b3b3);
+    background-image: -ms-linear-gradient(top, #363636, #b3b3b3);
+    background-image: -o-linear-gradient(top, #363636, #b3b3b3);
+    background-image: linear-gradient(to bottom, #363636, #b3b3b3);
+    text-decoration: none;
+}
 
 .boldDetail{
     font-weight: bold;
@@ -166,6 +150,13 @@ form{
 }
 
 #map{
+    border-bottom: solid 1px #aaa;
+    border-top: solid 1px #aaa;
+    height: 600px;
+    overflow: hidden;
+}
+
+#hexmap{
     border-bottom: solid 1px #aaa;
     border-top: solid 1px #aaa;
     height: 600px;
