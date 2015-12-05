@@ -1,7 +1,7 @@
 //(function () {
     var center = [+37.8, -115.5];
     var extent, scale,
-        classes = 6, scheme_id = "YlOrRd",
+        classes = 8, scheme_id = "YlOrRd",
         reverse = false;
     scheme = colorbrewer[scheme_id][classes],
 
@@ -36,15 +36,16 @@
 
     function refresh(url) {
         if (url == ""){
-            url = "http://localhost:5050/cube/quake_events/facts?cut=scale:3.00-8.00|year:1991-2001|lat:38.20365531807149-41.983994270935625|long:\\-115.927734375-\\-107.68798828125";
+            //url = "http://localhost:5050/cube/quake_events/facts?cut=scale:3.00-8.00|year:1991-2001|lat:38.20365531807149-41.983994270935625|long:\\-115.927734375-\\-107.68798828125";
+            url="data/init.json";
             //map.panTo(new L.LatLng((lat_high+lat_low)/2.0,(long_high + long_low)/2.0));
         }
         else{
-            d3.select("#quake-timeseries").remove();
             //map.removeLayers(pLayer);
             //pLayer.clear();
             console.log((lat_high+lat_low)/2.0 + "  " + (long_high) + " " + ( long_low)/2.0);
             map.panTo(new L.LatLng((lat_high+lat_low)/2.0,(long_high+long_low)/2.0));
+
         }
         console.log(url);
         console.log((new Date()).toLocaleTimeString());
@@ -84,7 +85,7 @@
             }
                 geojson['features'].push(newFeature);
             }
-
+            d3.select("#quake-timeseries").remove();
             console.log((new Date()).toLocaleTimeString());
 /* CONVERT TO  geojson end */
             pLayer = L.pointsLayer(geojson, {
@@ -142,15 +143,15 @@
         circles.on('click', function (d, i) {
             L.DomEvent.stopPropagation(d3.event);
 
-            var t = '<h3>Event ID <%- id %></h3>' +
+            var t = '<h3>USGS Event ID <%- id %></h3>' +
                 '<ul>' +
                 '<li> <b> Magnitude: <%- mag %> </b></li>' +
                 '<li>Depth: <%- depth %>km</li>' +
                 '<li><b>Date: <%- date %></b></li>' +
-                '<li>lat: <%- lat %></li>' +
-                '<li>long: <%- long %></li>' +
-                '<li><b>region: <%- region %></b></li>' +
-                '<li>regiontype: <%- regiontype %></li>' +
+                '<li>Latitude: <%- lat %></li>' +
+                '<li>Longitude: <%- long %></li>' +
+                '<li><b>Region: <%- region %></b></li>' +
+                '<li>Region Type: <%- regiontype %></li>' +
                 '</ul>';
 
             var data = {

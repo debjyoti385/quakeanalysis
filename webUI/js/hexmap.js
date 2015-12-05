@@ -22,7 +22,7 @@ var options = {
 };
 
 var hexLayer = L.hexbinLayer(options).addTo(hexmap)
-hexLayer.colorScale().range(['aqua','green', 'yellow','orange','red']);
+hexLayer.colorScale().range(['lightblue','green', 'yellow','orange','red']);
 
 var updateHexBin =  function (data){
     var hexData=[];
@@ -32,5 +32,7 @@ var updateHexBin =  function (data){
     if (hexData.length > 0) {
         hexLayer.data(hexData);
         hexmap.panTo(new L.LatLng((lat_high+lat_low)/2.0,(long_high+long_low)/2.0));
+        //console.log(map.getZoom());
+        hexmap.setZoom(map.getZoom());
     }
 };
