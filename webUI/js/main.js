@@ -19,7 +19,7 @@
     //
     //});
 
-    var areaSelect = L.areaSelect({width:750, height:450});
+    var areaSelect = L.areaSelect({width:550, height:450});
     areaSelect.on("change", function() {
         var bounds = this.getBounds();
         $("#result .swlat").val(bounds.getSouthWest().lat );
@@ -175,7 +175,7 @@
 
     function timeseries_chart(color) {
         var margin = { top: 5, right: 5, bottom: 40, left: 45 },
-            width = 960 ,
+            width = 1380 ,
             height = 135;
 
         var x = d3.time.scale(),
@@ -301,4 +301,3 @@
 //}());
 
 
-//refresh("http://localhost:5050/cube/quake_events/facts?cut=scale:2.80-6.20|lat:\\-43.95624788918461-\\-43.50971700928806|long:171.3812255859375-172.41119384765625");
