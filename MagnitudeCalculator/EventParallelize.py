@@ -105,7 +105,7 @@ def get_amplitude(st, dt, seed_id):
         a = max(abs(each.data))
         if a > ampl:
             ampl = a
-    #print ampl
+    print ampl
     return ampl
 
 def calculate_local_magnitude(eventLat, eventLon, sta_lat, sta_lon, ampl):
@@ -145,6 +145,7 @@ def processList(data):
                 print "TIMESERIES SUCCESS", each2
                 ampl = get_amplitude(st, dt, each2)
                 local_mag = calculate_local_magnitude(data[3], data[4], data[1], data[2], ampl)
+                print local_mag
                 magList.append(local_mag)
             except:
                 print "TIMESERIES FAIL", each2
@@ -153,9 +154,11 @@ def processList(data):
             retVal = data[6]+ "," + data[0]+ ","+ data[1] +"," +\
                     data[2] +","+ str(np.mean(magList))
                 #print retVal
+
             return retVal
         else:
             return 'FAIL'
+
     except:
         #print 'SEEDLIST FAIL ', each1[0]
         return 'FAIL'
@@ -216,7 +219,6 @@ def main():
 
     #getting list of stations for US networks
     #print USNETS
-
 
     #print inventory.get_contents()
     print "LENGTH OF NET STATION", len(netStationList)
