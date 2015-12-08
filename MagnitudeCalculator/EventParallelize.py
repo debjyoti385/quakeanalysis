@@ -1,13 +1,17 @@
 from obspy.fdsn.client import Client
 
 from obspy import iris
-from obspy import arclink
 from obspy import UTCDateTime
 from math import log10
 from obspy.core.util.geodetics import gps2DistAzimuth
 from obspy.core.util import NamedTemporaryFile
 import numpy as np
 import re
+import random
+import time
+import json
+import pickle
+import os.path
 from pyspark import SparkContext, SparkConf
 
 def parseResponse(data):
@@ -121,6 +125,8 @@ def calculate_local_magnitude(eventLat, eventLon, sta_lat, sta_lon, ampl):
 
 def processList(data):
     #print data[0]
+    print "SLEEP", data[6], data[7]
+    time.sleep(float(data[7]/1000))
     dt = UTCDateTime(data[5])
     timeSeriesClient = iris.Client()
     client = Client("IRIS")
@@ -130,7 +136,7 @@ def processList(data):
     magList = []
     try:
         respData = timeSeriesClient.resp(network, station, '*', '*', dt)
-        print "SEEDLIST SUCCESS ", respData[0]
+        #print "SEEDLIST SUCCESS ", respData[0]
         seedList = parseResponse(respData.decode())
         for each2 in seedList:
             arr = each2.split('.')
@@ -140,16 +146,16 @@ def processList(data):
                 ampl = get_amplitude(st, dt, each2)
                 local_mag = calculate_local_magnitude(data[3], data[4], data[1], data[2], ampl)
                 magList.append(local_mag)
-                #print each2, each1[1], each1[2], local_mag
-                #print "TIMESERIES SUCCESS", each2
             except:
-                #print "TIMESERIES FAIL", each2
+                print "TIMESERIES FAIL", each2
                 continue
-            if len(magList) > 0:
-                retVal = data[0]+ ", "+ data[1] +", " + data[2] + ", " +","+ str(sum(magList)/float(len(magList)))
+        if len(magList) > 0:
+            retVal = data[6]+ "," + data[0]+ ","+ data[1] +"," +\
+                    data[2] +","+ str(np.mean(magList))
                 #print retVal
-                return retVal
-
+            return retVal
+        else:
+            return 'FAIL'
     except:
         #print 'SEEDLIST FAIL ', each1[0]
         return 'FAIL'
@@ -162,47 +168,77 @@ def main():
     #timeSeriesClient = iris.Client()
     eventLatitude = 40.8287
     eventLongitude = -125.1338
-    eventTime = '2014-03-10T05:18:13.4000'
+    #eventTime = '2014-03-10T05:18:13.4000'
     eventMagnitude = 7.1
     magUnit = 'MW'
-    dt = UTCDateTime(eventTime)
-    print "EARTHQUAKE", str(eventLatitude), str(eventLongitude), str(eventMagnitude), magUnit
+    #dt = UTCDateTime(eventTime)
+
+    ##THIS LIST IS TO BE MADE BY PARSING EVENTS.CSV
+    eventList = [('5158626', 25.1395, -109.433, '2015-09-13T08:14:12.2400', 6.7, 'MWW'),\
+                 ('4768129', 38.2155, -122.3117, '2014-08-24T10:20:44.0600', 6.02, 'MW'),\
+                 ('4311182', 26.0913, -110.3209, '2013-10-19T17:54:54.7000', 6.6, 'MWW'),\
+                 ('3318739', 25.09, -109.5366, '2011-07-26T17:44:21.5100', 6.0, 'MW')]
+
+    #reading data from json file
+    with open('input.json') as data_file:
+        quake_data = json.load(data_file)
+    print quake_data
+    processedEvent = set()
+    if os.path.exists("processedEvent.p"):
+        processedEvent = pickle.load('processedEvent.p')
     netStationList = set()
+    for each_quake in quake_data:
+        eventID = each_quake['EventID']
+        if eventID in processedEvent:
+            continue
+        eventLatitude = each_quake['Latitude']
+        eventLongitude = each_quake['Longitude']
+        eventTime = each_quake['date']+"T"+each_quake['time']
+        for each_net in test:
+            try:
+                inventory = client.get_stations(network = each_net, latitude=eventLatitude, \
+                                        longitude=eventLongitude, maxradius=10)
+                #print type(inventory)
+                for each in inventory:
+                    each_content = each.get_contents()
+                    lat, lon = get_coordinates(each[0])
+                    channelList = each_content['stations']
+                    for each_channel in channelList:
+                        randTime = random.randint(1, 6000)
+                        netStationList.add((each_channel.split()[0], lat, lon,eventLatitude,\
+                                            eventLongitude, eventTime, eventID, randTime))
+            except:
+                #print "Failed for", each_net
+                continue
+
+
+    #print "EARTHQUAKE", str(eventLatitude), str(eventLongitude), str(eventMagnitude), magUnit
+
     #getting list of stations for US networks
     #print USNETS
-    for each_net in test:
-        try:
-            inventory = client.get_stations(network = each_net, latitude=eventLatitude, \
-                                        longitude=eventLongitude, maxradius=5)
-            #print type(inventory)
-            for each in inventory:
-                each_content = each.get_contents()
-                lat, lon = get_coordinates(each[0])
-                channelList = each_content['stations']
-                for each_channel in channelList:
-                    netStationList.add((each_channel.split()[0], lat, lon, eventLatitude, eventLongitude, eventTime))
-        except:
-            #print "Failed for", each_net
-            continue
+
 
     #print inventory.get_contents()
-    print netStationList
+    print "LENGTH OF NET STATION", len(netStationList)
     #getting time series data in a loop
     netRDD = sc.parallelize(netStationList)
     outRDD = netRDD.map(processList).filter(lambda x: not x =='FAIL' )
     stationMag = outRDD.collect()
-    f = open('stationMagnitudes.txt', 'w')
+    fStat = open('stationMagnitudes.txt', 'w')
+    fStat.write('EventID,NETSTATIONID,LATITUDE,LONGITUDE,MAGNITUDE')
     for each_station in stationMag:
-        f.write(each_station+"\n")
+        processedEvent.add(each_station.split(',')[0])
+        fStat.write(each_station+"\n")
     #f.write('test')
-    f.close()
+    fStat.close()
+    pickle.dump( processedEvent, open( "processedEvent.p", "w" ) )
 
 
     #st = timeSeriesClient.timeseries("AV", "OKSO", '*', "BHZ", dt, dt+10)
-test=set(['IU'])
+test=set(['IU', 'TA'])
 
 USNETS=set(['CU', 'IU', 'II', 'IM', 'AK', 'AT', 'AV', 'AZ', 'BK', 'CI', 'CN', 'EM', 'II', 'IM',\
-            'LB', 'LD', 'NN', 'NY', 'PO', 'TA', 'UO', 'US', 'UU',\
+            'LB', 'LD', 'NY', 'PO', 'TA', 'UO', 'US', 'UU',\
             'X8', 'XA', 'XD', 'XE', 'XG','XI','XN','XO','XQ','XR','XT',\
             'XT','XU','XV','YE','YG','YH','YQ','YT','YW','YX','Z9','ZG',\
             'ZH','ZI','ZK','ZL','ZZ'])
