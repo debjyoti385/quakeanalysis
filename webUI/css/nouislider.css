@@ -80,11 +80,12 @@
 /* Styling;
  */
 .noUi-background {
-	background: #FAFAFA;
+	background: #FACACA;
 	box-shadow: inset 0 1px 1px #f0f0f0;
 }
 .noUi-connect {
-	background: #807dba;
+	/*background: #807dba;*/
+	background: #AD0900;
 	box-shadow: inset 0 0 3px rgba(51,51,51,0.45);
 -webkit-transition: background 450ms;
 	transition: background 450ms;
