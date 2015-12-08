@@ -145,22 +145,25 @@ def processList(data):
                 print "TIMESERIES SUCCESS", each2
                 ampl = get_amplitude(st, dt, each2)
                 local_mag = calculate_local_magnitude(data[3], data[4], data[1], data[2], ampl)
-                print local_mag
+                #print local_mag
                 magList.append(local_mag)
+                #print "Appended to magnitude list"
             except:
-                print "TIMESERIES FAIL", each2
+                #print "TIMESERIES FAIL", each2
                 continue
+        print magList
         if len(magList) > 0:
-            retVal = data[6]+ "," + data[0]+ ","+ data[1] +"," +\
-                    data[2] +","+ str(np.mean(magList))
-                #print retVal
+            #print "Magnitude list obtained"
+            retVal = str(data[6])+ "," + data[0]+ ","+ data[1] +"," +\
+                    data[2] +","+ str(sum(magList)/float(len(magList)))
+            #print "Returning value:", retVal
 
             return retVal
         else:
             return 'FAIL'
 
     except:
-        #print 'SEEDLIST FAIL ', each1[0]
+        print 'SEEDLIST FAIL ', data[0]
         return 'FAIL'
 
 def main():
@@ -177,10 +180,10 @@ def main():
     #dt = UTCDateTime(eventTime)
 
     ##THIS LIST IS TO BE MADE BY PARSING EVENTS.CSV
-    eventList = [('5158626', 25.1395, -109.433, '2015-09-13T08:14:12.2400', 6.7, 'MWW'),\
+    '''eventList = [('5158626', 25.1395, -109.433, '2015-09-13T08:14:12.2400', 6.7, 'MWW'),\
                  ('4768129', 38.2155, -122.3117, '2014-08-24T10:20:44.0600', 6.02, 'MW'),\
                  ('4311182', 26.0913, -110.3209, '2013-10-19T17:54:54.7000', 6.6, 'MWW'),\
-                 ('3318739', 25.09, -109.5366, '2011-07-26T17:44:21.5100', 6.0, 'MW')]
+                 ('3318739', 25.09, -109.5366, '2011-07-26T17:44:21.5100', 6.0, 'MW')]'''
 
     #reading data from json file
     with open('input.json') as data_file:
@@ -188,7 +191,9 @@ def main():
     print quake_data
     processedEvent = set()
     if os.path.exists("processedEvent.p"):
-        processedEvent = pickle.load('processedEvent.p')
+        pickleFile = open('processedEvent.p', 'rb')
+        processedEvent = pickle.load(pickleFile)
+        pickleFile.close()
     netStationList = set()
     for each_quake in quake_data:
         eventID = each_quake['EventID']
@@ -197,7 +202,7 @@ def main():
         eventLatitude = each_quake['Latitude']
         eventLongitude = each_quake['Longitude']
         eventTime = each_quake['date']+"T"+each_quake['time']
-        for each_net in test:
+        for each_net in USNETS:
             try:
                 inventory = client.get_stations(network = each_net, latitude=eventLatitude, \
                                         longitude=eventLongitude, maxradius=10)
@@ -207,7 +212,7 @@ def main():
                     lat, lon = get_coordinates(each[0])
                     channelList = each_content['stations']
                     for each_channel in channelList:
-                        randTime = random.randint(1, 6000)
+                        randTime = random.randint(1, 10)
                         netStationList.add((each_channel.split()[0], lat, lon,eventLatitude,\
                                             eventLongitude, eventTime, eventID, randTime))
             except:
@@ -225,19 +230,25 @@ def main():
     #getting time series data in a loop
     netRDD = sc.parallelize(netStationList)
     outRDD = netRDD.map(processList).filter(lambda x: not x =='FAIL' )
+    #outRDD = netRDD.map(processList)
     stationMag = outRDD.collect()
-    fStat = open('stationMagnitudes.txt', 'w')
-    fStat.write('EventID,NETSTATIONID,LATITUDE,LONGITUDE,MAGNITUDE')
+    print stationMag
+    fStat = open('stationMagnitudes.txt', 'a')
+    #fStat.write('EventID,NETSTATIONID,LATITUDE,LONGITUDE,MAGNITUDE'+"\n")
     for each_station in stationMag:
-        processedEvent.add(each_station.split(',')[0])
+        event_id = each_station.split(',')[0]
+        #print event_id
+        processedEvent.add(event_id)
         fStat.write(each_station+"\n")
     #f.write('test')
     fStat.close()
-    pickle.dump( processedEvent, open( "processedEvent.p", "w" ) )
+    pickleWrite = open( "processedEvent.p", "w" )
+    pickle.dump( processedEvent, pickleWrite)
+    pickleWrite.close()
 
 
     #st = timeSeriesClient.timeseries("AV", "OKSO", '*', "BHZ", dt, dt+10)
-test=set(['IU', 'TA'])
+test=set(['IU'])
 
 USNETS=set(['CU', 'IU', 'II', 'IM', 'AK', 'AT', 'AV', 'AZ', 'BK', 'CI', 'CN', 'EM', 'II', 'IM',\
             'LB', 'LD', 'NY', 'PO', 'TA', 'UO', 'US', 'UU',\
