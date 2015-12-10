@@ -129,6 +129,6 @@ $('#update').click(function(){
 
 $('#contour').click(function(){
     //alert ( SPARK_SERVER + "get_image/" + $("#event_list").val() );
-    imageURL=SPARK_SERVER + "get_image/"$("#event_list").val();
+    imageURL=SPARK_SERVER + "get_image/"+$("#event_list").val();
     window.open(imageURL,"_blank");
 });
