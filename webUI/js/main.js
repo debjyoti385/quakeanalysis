@@ -152,7 +152,8 @@
                 '<li>Longitude: <%- long %></li>' +
                 '<li><b>Region: <%- region %></b></li>' +
                 '<li>Region Type: <%- regiontype %></li>' +
-                '</ul>';
+                '</ul>' +
+                '<h5>Add to Contour List <a onclick="addToList(<%- id %>);" href="javascript:void(0);"><%- id %></h5>';
 
             var data = {
                 id: d.id,
@@ -163,6 +164,7 @@
                 lat: d.properties.latitude,
                 long: d.properties.longitude,
                 date: d.properties.date
+
             };
 
             L.popup()

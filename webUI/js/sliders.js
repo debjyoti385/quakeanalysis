@@ -120,7 +120,15 @@ $('#update').click(function(){
         _long_high =  long_high;
 
 
-    url = 'http://localhost:5050/cube/quake_events/facts?cut=scale:'+ scale_low + '-' + scale_high + '|year:' + date_start.getUTCFullYear() +"-" + date_end.getUTCFullYear()  +'|lat:'+ _lat_low + '-' + _lat_high +'|long:'+ _long_low + '-'+ _long_high ;
+    url = EVENT_SERVER + 'cube/quake_events/facts?cut=scale:'+ scale_low + '-' + scale_high + '|year:' + date_start.getUTCFullYear() +"-" + date_end.getUTCFullYear()  +'|lat:'+ _lat_low + '-' + _lat_high +'|long:'+ _long_low + '-'+ _long_high ;
     //alert(url);
     refresh(url);
+});
+
+
+
+$('#contour').click(function(){
+    //alert ( SPARK_SERVER + "get_image/" + $("#event_list").val() );
+    imageURL=SPARK_SERVER + "get_image/"$("#event_list").val();
+    window.open(imageURL,"_blank");
 });

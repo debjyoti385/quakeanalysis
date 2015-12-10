@@ -25,10 +25,14 @@
     <script type="text/javascript" src="js/hexbin.js"></script>
 
 
+
+
     <style type="text/css">
         html, body {
             height: 100%;
         }
+
+        #image_popup { display:none; }
 
         .leaflet-popup-content ul {
             padding-left: 1.5em;
@@ -64,7 +68,8 @@
         <div style="display:  inline-block;  width: 90%;" ><h1>Quake Events</h1></div>
         <!--<div id="update"  >UPDATE</div>-->
         <div id="update" href="#" class="button btn" style="position:fixed; top:40%; left:-10px; z-index:100; margin: 10px auto;transform:     -webkit-transform: rotate(-90deg);    -moz-transform: rotate(-90deg);    -o-transform: rotate(-90deg);    -ms-transform: rotate(-90deg);    transform: rotate(-90deg);"> UPDATE <i class="icon-chevron-right"></i></div>
-
+        <input type="text" id="event_list" href="#" class="box" style="position:fixed; top:2px; width: 200px;right:10px; z-index:100; margin: 10px auto;">
+        <div id="contour" href="#" class="button box" style="position:fixed; top:100px; right:-20px; z-index:100; margin: 10px auto;transform:     -webkit-transform: rotate(-90deg);    -moz-transform: rotate(-90deg);    -o-transform: rotate(-90deg);    -ms-transform: rotate(-90deg);    transform: rotate(-90deg);"> GET CONTOUR <i class="icon-chevron-right"></i></div>
 	</div>
     <div id="filter" >
         <div id="result">
@@ -80,12 +85,12 @@
             </div>
             <div style="display: inline-block; width: 49.3%; text-align: center;">
                 South West:
-                <input type="text" class="swlat">
-                <input type="text" class="swlng">
+                <input type="text" class="swlat box">
+                <input type="text" class="swlng box">
                 <br>
                 North East:
-                <input type="text" class="nelat">
-                <input type="text" class="nelng">
+                <input type="text" class="nelat box">
+                <input type="text" class="nelng box">
             </div>
         </div>
 
@@ -108,8 +113,7 @@
         <div id='hexmap' style="border: 1px solid #ccc  margin: 0 0 50px 0; display:inline-block; width:49.5%; "></div>
     </div>
 
-    <div>
-    </div>
+    <div id="image_popup">jhjhhk</div>
 
 
     <script type="text/javascript">
@@ -122,6 +126,21 @@
         var lat_low =33.706062655101206;
         var long_high = -106.45751953125;
         var long_low = -122.93701171874999;
+        var SPARK_SERVER = "localhost:5432/"
+        var EVENT_SERVER = "localhost:8000/"
+
+
+        var addToList = function (eventId){
+            $('#event_list').val(function(index, value) {
+                if (value != "") {
+                    return value + '|' + eventId;
+                }
+                else{
+                    return eventId;
+                }
+            })
+        }
+
     </script>
 
     <script type="text/javascript" src="js/sliders.js"></script>
