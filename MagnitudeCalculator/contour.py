@@ -43,7 +43,7 @@ xi, yi = np.meshgrid(xi, yi)
 
 # interpolate
 x, y, z = data['projected_lon'].values, data['projected_lat'].values, data.MAGNITUDE.values
-zi = griddata(x, y, z, xi, yi)
+zi = griddata(x, y, z, xi, yi, interp='linear')
 
 # draw map details
 m.drawmapboundary(fill_color = '#3f6077')
