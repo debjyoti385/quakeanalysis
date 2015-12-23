@@ -5,6 +5,7 @@ Files
 -----
 
 This directory contains following files:
+
 *   model.json      - logical model
 *   slicer.ini      - server configuration file
 *   data.csv        - raw data of events [Google Drive Link](https://drive.google.com/open?id=0B7MJnptUCNQPZGZzQzBQUURSYVE)
@@ -13,6 +14,7 @@ This directory contains following files:
 *   prepare_data.py - script for preparing the data: load them into database and create a view
 *   aggregate.py    - example aggregations
 *   requirements.sh - Install all the pip requirements 
+
 Quick start
 -----------
 
