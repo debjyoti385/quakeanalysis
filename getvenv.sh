@@ -13,7 +13,7 @@ tar xzf virtualenv-$VERSION.tar.gz
 # Create the first "bootstrap" environment.
 $PYTHON virtualenv-$VERSION/virtualenv.py $INITIAL_ENV
 # Don't need this anymore.
-rm -rf virtualenv-$VERSION
+rm -rf virtualenv-$VERSION.tar.gz
 # Install virtualenv into the environment.
 $INITIAL_ENV/bin/pip install virtualenv-$VERSION.tar.gz
 source bootstrap/bin/activate
