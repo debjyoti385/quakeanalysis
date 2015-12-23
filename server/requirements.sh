@@ -1,13 +1,13 @@
 #!/bin/bash
-sudo pip install cubes all
-sudo pip uninstall cubes
-sudo pip install git+git://github.com/DataBrewery/cubes.git
-sudo pip install sqlalchemy
-sudo pip install flask
-sudo pip install click
-sudo pip install grako
-sudo pip install expressions
-sudo pip install json-schema
-sudo pip install jsonschema
-sudo pip install python-dateutil
+pip install cubes all
+pip uninstall cubes
+pip install git+git://github.com/DataBrewery/cubes.git
+pip install sqlalchemy
+pip install flask
+pip install click
+pip install grako
+pip install expressions
+pip install json-schema
+pip install jsonschema
+pip install python-dateutil
 
