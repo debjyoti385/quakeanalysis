@@ -1,3 +1,4 @@
+#!/bin/bash
 sudo pip install cubes all
 sudo pip uninstall cubes
 sudo pip install git+git://github.com/DataBrewery/cubes.git
