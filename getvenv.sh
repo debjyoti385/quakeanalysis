@@ -1,3 +1,4 @@
+#!/bin/bash
 # Select current version of virtualenv:
 VERSION=12.0.7
 # Name your first "bootstrap" environment:
