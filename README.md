@@ -8,6 +8,7 @@ Contributors:
 *   Debjyoti Paul (deb@cs.utah.edu)
 
 Credits:
+
 *   Obspy
 *   Leaflet, D3 and other javascripts libraries
 *   Apache Spark
