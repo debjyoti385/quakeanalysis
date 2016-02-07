@@ -4,8 +4,8 @@ Wiki of this repository is available [here](https://bitbucket.org/debjyotipaul38
 
 Contributors:
 
-*   Zinnia Mukherjee (zinnia@cs.utah.edu)
 *   Debjyoti Paul (deb@cs.utah.edu)
+*   Zinnia Mukherjee (zinnia@cs.utah.edu)
 
 Credits:
 
