@@ -177,7 +177,7 @@
 
     function timeseries_chart(color) {
         var margin = { top: 5, right: 5, bottom: 40, left: 45 },
-            width = 1380 ,
+            width = 1100 ,
             height = 135;
 
         var x = d3.time.scale(),

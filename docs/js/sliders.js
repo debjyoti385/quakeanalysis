@@ -17,7 +17,7 @@ noUiSlider.create(dateSlider, {
     step: 365 * 24 * 60 * 60 * 1000,
 
 // Two more timestamps indicate the handle starting positions.
-    start: [ timestamp('2011'), timestamp('2015') ],
+    start: [ timestamp('1991'), timestamp('2002') ],
 
 // No decimals
     format: wNumb({
