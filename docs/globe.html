@@ -125,10 +125,10 @@
     <span> Earthquake events </span>
   </a>
 
-  <script type="text/javascript" src="/globe/Detector.js"></script>
-  <script type="text/javascript" src="/globe/three.min.js"></script>
-  <script type="text/javascript" src="/globe/Tween.js"></script>
-  <script type="text/javascript" src="/globe/globe.js"></script>
+  <script type="text/javascript" src="./globe/Detector.js"></script>
+  <script type="text/javascript" src="./globe/three.min.js"></script>
+  <script type="text/javascript" src="./globe/Tween.js"></script>
+  <script type="text/javascript" src="./globe/globe.js"></script>
   <script type="text/javascript">
 
     if(!Detector.webgl){
@@ -170,7 +170,7 @@
           
       xhr = new XMLHttpRequest();
       // xhr.open('GET', '/globe/population909500.json', true);
-      xhr.open('GET', '/globe/data.json', true);
+      xhr.open('GET', './globe/data.json', true);
       xhr.onreadystatechange = function(e) {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
